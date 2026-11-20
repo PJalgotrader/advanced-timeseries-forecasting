@@ -39,7 +39,7 @@ Every notebook prints its Keras version and backend in the first cell. Compare i
 
 | Last run | Python | Keras | Backend | Notes |
 |---|---|---|---|---|
-| 2026-11-20 | 3.12 | 3.15.1 | TensorFlow 2.21 | notebook 01; Linux, NVIDIA GPU |
+| 2026-11-20 | 3.12 | 3.15.1 | TensorFlow 2.21 | notebooks 01 and 02; Linux (WSL), NVIDIA RTX 4070. Notebook 02 takes about 3 hours with its two slow models |
 
 Notebook 01 also ran unchanged on Keras 2.14 with TensorFlow 2.14 (Python 3.10).
 
