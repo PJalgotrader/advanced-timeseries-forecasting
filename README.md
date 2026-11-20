@@ -1,0 +1,71 @@
+# Advanced Time Series Forecasting
+
+The code behind my video series on forecasting with machine learning and deep learning:
+**ML, deep learning & time series, explained visually.**
+
+Each notebook goes with one video. The videos explain the ideas with pictures; the notebooks are the same thing in
+code, short enough to read from top to bottom. More models are added as the series grows.
+
+- Videos: https://www.youtube.com/@pedramjahangiry
+- Interactive tools and 3D books: https://pedramjahangiry.com
+
+## What is here
+
+| Folder | Notebook | Video |
+|---|---|---|
+| `07-deep-sequence-models/` | `01_rnn_lstm_one_series.ipynb`: RNN and LSTM on one monthly series (airline passengers) | RNN and LSTM in Python (Deep Forecasting, Module 7, part 4.1) |
+| `07-deep-sequence-models/` | `02_rnn_lstm_weather.ipynb`: dense, convolution, RNN, LSTM, GRU and bidirectional models on weather data with 14 features | RNN, LSTM and GRU in Python: the weather data (Module 7, part 4.2) |
+
+The theory for both is in three videos: dense network vs RNN, the RNN, the LSTM.
+
+## Every notebook follows the same six steps
+
+1. **The data**, split by time: train, validation, test.
+2. **Prepare** it, using the training part only.
+3. **Windows**: cut the series into samples with a few lines of NumPy.
+4. **A baseline** that needs no training.
+5. **Build and train** a model, with early stopping.
+6. **Score** it in real units, over several runs.
+
+The models change from notebook to notebook. The steps do not.
+
+## Running the notebooks
+
+Setup changes every year, so it is not written into the notebooks. Watch the setup video for the current year on the
+channel. In short, a notebook needs Python with `keras` and one of its backends (TensorFlow, PyTorch or JAX),
+`numpy`, `pandas` and `matplotlib`. The second notebook is much faster with a GPU.
+
+Every notebook prints its Keras version and backend in the first cell. Compare it with this table:
+
+| Last run | Python | Keras | Backend | Notes |
+|---|---|---|---|---|
+| 2026-11-20 | 3.12 | 3.15.1 | TensorFlow 2.21 | notebook 01; Linux, NVIDIA GPU |
+
+Notebook 01 also ran unchanged on Keras 2.14 with TensorFlow 2.14 (Python 3.10).
+
+## Working with a coding assistant
+
+These notebooks are meant to be changed. Open one next to an AI coding assistant and ask for what you need:
+"forecast 12 months ahead", "use my own data", "rewrite this for PyTorch", "update this for the current version of
+Keras". Then check what comes back, every time:
+
+- **the shapes**: samples, time steps, features
+- **the split**: by time, never shuffled
+- **the baseline**: still there, and beaten
+- **the test data**: touched once, at the very end
+
+## For maintainers
+
+The notebooks are built from plain Python files in each folder's `src/`:
+
+```
+python tools/build_notebook.py 07-deep-sequence-models/src/01_rnn_lstm_one_series.py
+bash tools/run_notebook.sh 07-deep-sequence-models/01_rnn_lstm_one_series.ipynb <python> <kernel>
+```
+
+Edit the `src` file, build, run, and commit both, so that the saved outputs always belong to the code.
+
+## Data
+
+- `data/airline_passengers.csv`: monthly international airline passengers, 1949 to 1960 (Box and Jenkins).
+- Jena climate, 2009 to 2016 (Max Planck Institute for Biogeochemistry): downloaded by the weather notebook.
