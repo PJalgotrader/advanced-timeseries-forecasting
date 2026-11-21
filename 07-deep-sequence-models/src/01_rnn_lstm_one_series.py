@@ -4,7 +4,8 @@
 # The code for the video **"RNN and LSTM in Python: forecasting one time series"** (Deep Forecasting, Module 7, part 4.1).
 # The theory is in the three videos before it: dense network vs RNN, the RNN, the LSTM.
 #
-# Every forecasting project in this repository follows the same six steps:
+# Every forecasting project in this repository follows the same six steps, and reports three forecasting horizons
+# (one step ahead, multi-step, multi-output; section 7):
 #
 # 1. the data, split by time
 # 2. prepare it, using the training part only
@@ -69,30 +70,32 @@ plt.title("Change of the log, month to month"); plt.show()
 # %% [markdown]
 # ## 3. Cut it into windows
 #
-# One sample is a **window**: 12 months in, the next month out. Ten lines of NumPy, nothing hidden.
+# One sample is a **window**: **Tx** values in, **Ty** values out. Here Tx = 12 months in and Ty = 1, the next month
+# (Ty = 12 comes back in section 7). A few lines of NumPy, nothing hidden.
 # A recurrent layer wants the shape **(samples, time steps, features)**: here (samples, 12, 1).
 #
 # The test windows reach back into the validation months for their inputs. That is fine: at forecast time those
 # months are in the past. What matters is that no test **target** was used for training.
 
 # %%
-LENGTH = 12
+Tx, Ty = 12, 1                                  # Tx values in, Ty values out
 
-def make_windows(series, length, start, end):
-    """Every window of `length` steps whose target, the next step, lies in series[start:end]."""
-    X = np.stack([series[t - length:t] for t in range(start, end)])
-    y = series[start:end]
+def make_windows(series, Tx, Ty, start, end):
+    """Every window of Tx inputs whose Ty targets all lie in series[start:end]."""
+    ts = range(start, end - Ty + 1)
+    X = np.stack([series[t - Tx:t] for t in ts])
+    y = np.stack([series[t:t + Ty] for t in ts])
     return X[..., None], y                      # the None adds the last axis: 1 feature
 
 n = len(change)
 test_start, val_start = n - N_TEST, n - N_TEST - N_VAL
-X_train, y_train = make_windows(change, LENGTH, LENGTH, val_start)
-X_val, y_val = make_windows(change, LENGTH, val_start, test_start)
-X_test, y_test = make_windows(change, LENGTH, test_start, n)
+X_train, y_train = make_windows(change, Tx, Ty, Tx, val_start)
+X_val, y_val = make_windows(change, Tx, Ty, val_start, test_start)
+X_test, y_test = make_windows(change, Tx, Ty, test_start, n)
 
 for name, X in [("train", X_train), ("validation", X_val), ("test", X_test)]:
     print(f"{name:10s} {X.shape}")
-print("\nfirst window:", X_train[0, :, 0].round(3), "-> target", y_train[0].round(3))
+print("\nfirst window:", X_train[0, :, 0].round(3), "-> target", y_train[0, 0].round(3))
 
 # %% [markdown]
 # ## 4. A baseline to beat
@@ -128,13 +131,13 @@ for name, value in results.items():
 # state into one number: 16 weights and 1 bias.
 
 # %%
-def build(*hidden_layers):
-    """A model that reads a window of 12 months with 1 feature and returns one number."""
-    inputs = keras.Input(shape=(LENGTH, 1))
+def build(*hidden_layers, Ty=1):
+    """A model that reads a window of Tx months with 1 feature and returns Ty numbers."""
+    inputs = keras.Input(shape=(Tx, 1))
     x = inputs
     for layer in hidden_layers:
         x = layer(x)
-    return keras.Model(inputs, layers.Dense(1)(x))
+    return keras.Model(inputs, layers.Dense(Ty)(x))
 
 model = build(layers.SimpleRNN(16))
 model.summary()
@@ -144,10 +147,12 @@ model.summary()
 # That one callback replaces guessing the number of epochs.
 
 # %%
-def train(model, verbose=0):
+def train(model, verbose=0, data=None):
+    """Train with early stopping; data = (X_train, y_train, X_val, y_val), the Ty = 1 windows unless given."""
+    Xt, yt, Xv, yv = data or (X_train, y_train, X_val, y_val)
     model.compile(optimizer=keras.optimizers.Adam(0.003), loss="mse")
     stop = keras.callbacks.EarlyStopping(monitor="val_loss", patience=40, restore_best_weights=True)
-    return model.fit(X_train, y_train, validation_data=(X_val, y_val),
+    return model.fit(Xt, yt, validation_data=(Xv, yv),
                      epochs=400, batch_size=16, callbacks=[stop], verbose=verbose)
 
 keras.utils.set_random_seed(0)
@@ -247,12 +252,83 @@ for name, lo, hi in zip(table["model"], table["best %"], table["worst %"]):
 plt.xlabel("error on the test year, percent (lower is better)"); plt.title("One month ahead, 1960"); plt.tight_layout(); plt.show()
 
 # %% [markdown]
+# ## 7. Three forecasting horizons: one step, multi-step, multi-output
+#
+# Everything above is **one step ahead**: each month of 1960 is forecast from the 12 *real* months before it. That
+# flatters every model, because in real life you do not know February when you forecast it in December. Preparing the
+# data with **Tx** (values in) and **Ty** (values out) gives two honest ways to forecast the whole year from
+# December 1959:
+#
+# - **multi-step** (recursive): the same Ty = 1 model forecasts January; that forecast becomes its newest input; it
+#   forecasts February; and so on, 12 times. Errors can pile up.
+# - **multi-output** (direct): a model with **Ty = 12** outputs forecasts all 12 months in one shot.
+#
+# Each model is trained 10 times here: the two whole-year forecasts move far more from run to run than one step
+# ahead, and 5 runs are not enough to find their middle.
+#
+# There is a separate video on the three horizons, in theory and in Python, for any model. Classical models such as
+# seasonal ARIMA and ETS forecast multi-step by their nature; multi-output would take one model per month ahead.
+
+# %%
+def multi_step(model):
+    """Recursive: forecast one month, append it to the inputs, repeat until the 12 months of 1960 are done."""
+    window, path = list(change[test_start - Tx:test_start]), []
+    for _ in range(N_TEST):
+        x = np.array(window[-Tx:], "float32")[None, :, None]
+        step = float(keras.ops.convert_to_numpy(model(x, training=False))[0, 0])   # calling the model directly: faster than predict for one window
+        path.append(step); window.append(step)
+    return passengers[test_start] * np.exp(np.cumsum(path))       # December 1959 x the accumulated changes
+
+H = N_TEST                                                     # Ty = 12: all of 1960 at once
+X_train12, y_train12 = make_windows(change, Tx, H, Tx, val_start)
+X_val12, y_val12 = make_windows(change, Tx, H, val_start, test_start)
+X_last = change[test_start - Tx:test_start][None, :, None]      # the 12 months up to December 1959
+print("Ty = 12 windows:", X_train12.shape, y_train12.shape, "| validation", X_val12.shape)
+
+def multi_output(model):
+    return passengers[test_start] * np.exp(np.cumsum(model.predict(X_last, verbose=0)[0]))
+
+# %%
+horizon_models = {
+    "dense network (32, 16)": lambda Ty: build(layers.Flatten(), layers.Dense(32, activation="relu"), layers.Dense(16, activation="relu"), Ty=Ty),
+    "simple RNN (16)":        lambda Ty: build(layers.SimpleRNN(16), Ty=Ty),
+    "LSTM (16)":              lambda Ty: build(layers.LSTM(16), Ty=Ty),
+}
+HORIZON_RUNS = 10                # multi-step and multi-output move far more from run to run than one step: 10 runs, not 5
+horizons, paths = [], {}
+for name, make in horizon_models.items():
+    one, rec, direct = [], [], []
+    for seed in range(HORIZON_RUNS):
+        keras.utils.set_random_seed(seed)
+        m1 = make(1); train(m1)
+        one.append(score(forecast(m1))); rec_path = multi_step(m1); rec.append(score(rec_path))
+        keras.utils.set_random_seed(seed)
+        m12 = make(H); train(m12, data=(X_train12, y_train12, X_val12, y_val12))
+        mo_path = multi_output(m12); direct.append(score(mo_path))
+        if seed == 0: paths[name] = (rec_path, mo_path)
+    horizons.append({"model": name, "one step %": np.median(one), "multi-step %": np.median(rec), "multi-output %": np.median(direct)})
+    print(f"{name:24s} one step {np.median(one):4.1f}%   multi-step {np.median(rec):4.1f}%   multi-output {np.median(direct):4.1f}%   (middle of {HORIZON_RUNS} runs)")
+
+horizons = pd.DataFrame(horizons).round(1)
+horizons
+
+# %%
+rec_path, mo_path = paths["simple RNN (16)"]
+plt.figure(figsize=(9, 3.5))
+plt.plot(months.iloc[-N_TEST:], actual, "o-", color="#2e9e6b", label="actual")
+plt.plot(months.iloc[-N_TEST:], rec_path, "o--", color="#e07b39", label="multi-step (recursive)")
+plt.plot(months.iloc[-N_TEST:], mo_path, "o--", color="#1f3a68", label="multi-output (Ty = 12)")
+plt.title("Simple RNN, 1960 forecast from December 1959 (first run)"); plt.legend(); plt.show()
+
+# %% [markdown]
 # ## What this shows
 #
+# - One step ahead flatters every model. Forecast the whole of 1960 from December (multi-step or multi-output) and
+#   the middle run gets worse, and the spread between runs gets much larger: one number from one run tells you little.
 # - Every network beats the two baselines by a wide margin, and they land within about half a percentage point of
 #   each other. On 144 well-behaved months, more layers and gates buy nothing.
-# - The classical "airline model" (a seasonal ARIMA with two parameters) scores about 3.0% on the same year, and ETS
-#   about 4.1%. For a small, regular series, start there.
+# - The classical "airline model" (a seasonal ARIMA with two parameters) scores about 3.0% one step ahead and about
+#   2.9% for the whole year forecast from December; ETS about 4.1% and 4.3%. For a small, regular series, start there.
 # - What carries over to bigger problems is the recipe: split by time, prepare with the training part, windows,
 #   a baseline, early stopping, scores in real units, several runs. The next notebook uses it on weather data with
 #   14 features and 420,000 rows.
@@ -261,7 +337,8 @@ plt.xlabel("error on the test year, percent (lower is better)"); plt.title("One 
 #
 # Good things to ask an AI coding assistant, with this notebook open:
 #
-# - "Forecast 12 months ahead instead of 1." (Change the target in `make_windows`, or feed forecasts back in.)
+# - "Use 24 months of history instead of 12." (Change Tx, and check how many windows are left.)
+# - "Add the GRU to the three-horizon table."
 # - "Swap the airline data for my own monthly series."
 # - "Port this to PyTorch." or "Update this for the current version of Keras."
 #

@@ -13,7 +13,7 @@ code, short enough to read from top to bottom. More models are added as the seri
 
 | Folder | Notebook | Video |
 |---|---|---|
-| `07-deep-sequence-models/` | `01_rnn_lstm_one_series.ipynb`: RNN and LSTM on one monthly series (airline passengers) | RNN and LSTM in Python (Deep Forecasting, Module 7, part 4.1) |
+| `07-deep-sequence-models/` | `01_rnn_lstm_one_series.ipynb`: RNN and LSTM on one monthly series (airline passengers), at three horizons: one step ahead, multi-step, multi-output | RNN and LSTM in Python (Deep Forecasting, Module 7, part 4.1) |
 | `07-deep-sequence-models/` | `02_rnn_lstm_weather.ipynb`: dense, convolution, RNN, LSTM, GRU and bidirectional models on weather data with 14 features | RNN, LSTM and GRU in Python: the weather data (Module 7, part 4.2) |
 
 The theory for both is in three videos: dense network vs RNN, the RNN, the LSTM.
@@ -25,7 +25,9 @@ The theory for both is in three videos: dense network vs RNN, the RNN, the LSTM.
 3. **Windows**: cut the series into samples with a few lines of NumPy.
 4. **A baseline** that needs no training.
 5. **Build and train** a model, with early stopping.
-6. **Score** it in real units, over several runs.
+6. **Score** it in real units, over several runs, and at three horizons where the data allows: **one step ahead**,
+   **multi-step** (a model fed its own forecasts) and **multi-output** (the whole horizon at once). Windows are cut with
+   **Tx** values in and **Ty** values out.
 
 The models change from notebook to notebook. The steps do not.
 
@@ -39,9 +41,10 @@ Every notebook prints its Keras version and backend in the first cell. Compare i
 
 | Last run | Python | Keras | Backend | Notes |
 |---|---|---|---|---|
-| 2026-11-20 | 3.12 | 3.15.1 | TensorFlow 2.21 | notebooks 01 and 02; Linux (WSL), NVIDIA RTX 4070. Notebook 02 takes about 3 hours with its two slow models |
+| 2026-11-20 | 3.12 | 3.15.1 | TensorFlow 2.21 | notebooks 01 and 02; Linux (WSL), NVIDIA RTX 4070. Notebook 01 takes about 20 minutes on a CPU; notebook 02 about 4 hours on the GPU (10 runs per fast model, and its two slow models) |
 
-Notebook 01 also ran unchanged on Keras 2.14 with TensorFlow 2.14 (Python 3.10).
+An earlier version of notebook 01 (before the three horizons) also ran unchanged on Keras 2.14 with TensorFlow 2.14
+(Python 3.10).
 
 ## Working with a coding assistant
 
