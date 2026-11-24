@@ -8,8 +8,8 @@ videos of Deep Forecasting, Module 7. It stands alone, and it will cover many mo
 
 - **No university name, course number or "Prof." anywhere**: not in notebooks, README, comments or commit
   messages. This repository is not my university course repository, which I change myself, separately.
-- **The repository is private until I say to make it public.** It has to be public before a video that links to it
-  is published; ask me then.
+- **The repository is public** (since 2026-11-24, on my word). Everything committed here is visible to anyone: no
+  keys, no local paths, no private notes.
 - **Notebooks must age well.** They go with videos that stay up for years:
   - no installation steps and no version-specific workarounds in a notebook; setup is "the setup video for this year"
   - `import keras` and `from keras import layers` only (no `tensorflow.keras`), so the code does not depend on the backend

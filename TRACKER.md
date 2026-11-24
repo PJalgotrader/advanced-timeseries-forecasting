@@ -11,7 +11,8 @@ Rules and how notebooks are built: [CLAUDE.md](CLAUDE.md). Update at the end of 
 
 ## Next up
 
-- [ ] **Pedram: make the repository public** before the first video that links to it is published.
+- [x] **Repository made public** on 2026-11-24, on Pedram's word. Both Module 7 Python videos link their notebook in
+      the description.
 - [ ] **Pedram: choose a licence** for the code (none is set).
 - [ ] The setup video for the year (the videos say "watch the installation video for this year"); when it exists,
       link it in the README.
@@ -33,3 +34,5 @@ Rules and how notebooks are built: [CLAUDE.md](CLAUDE.md). Update at the end of 
 - 2026-11-20 — Notebook 01: Pedram's Tx and Ty in `make_windows(series, Tx, Ty, start, end)`, and section 7 with his
   three horizons (one step ahead, multi-step, multi-output; 10 runs each): dense 3.8 / 3.9 / 4.3, simple RNN 3.2 / 4.1 /
   4.7, LSTM 3.6 / 4.1 / 4.9 percent. A foundation video on the three horizons is promised in both Python videos.
+- 2026-11-24 — Made public on Pedram's word, after a check of every file and the whole history (no keys, local paths
+  or university names). The notebook links are in the descriptions of the two Python videos.
