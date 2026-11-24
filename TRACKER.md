@@ -13,7 +13,7 @@ Rules and how notebooks are built: [CLAUDE.md](CLAUDE.md). Update at the end of 
 
 - [x] **Repository made public** on 2026-11-24, on Pedram's word. Both Module 7 Python videos link their notebook in
       the description.
-- [ ] **Pedram: choose a licence** for the code (none is set).
+- [x] **Licence: MIT** (2026-11-24, Pedram's choice).
 - [ ] The setup video for the year (the videos say "watch the installation video for this year"); when it exists,
       link it in the README.
 - [ ] A yearly check: run every notebook top to bottom in the current environment and update "Tested with".
@@ -36,3 +36,4 @@ Rules and how notebooks are built: [CLAUDE.md](CLAUDE.md). Update at the end of 
   4.7, LSTM 3.6 / 4.1 / 4.9 percent. A foundation video on the three horizons is promised in both Python videos.
 - 2026-11-24 — Made public on Pedram's word, after a check of every file and the whole history (no keys, local paths
   or university names). The notebook links are in the descriptions of the two Python videos.
+- 2026-11-24 — MIT licence added on Pedram's word (`LICENSE`, and a line in the README).

@@ -72,3 +72,8 @@ Edit the `src` file, build, run, and commit both, so that the saved outputs alwa
 
 - `data/airline_passengers.csv`: monthly international airline passengers, 1949 to 1960 (Box and Jenkins).
 - Jena climate, 2009 to 2016 (Max Planck Institute for Biogeochemistry): downloaded by the weather notebook.
+
+## Licence
+
+The code is under the MIT licence ([LICENSE](LICENSE)): use it, change it, share it, with credit. The data sets keep
+their own terms (see Data).
