@@ -5,3 +5,7 @@ __pycache__/
 .venv/
 data/jena_climate_2009_2016.csv*
 .DS_Store
+
+# my working notes, kept on my machine only
+CLAUDE.md
+TRACKER.md

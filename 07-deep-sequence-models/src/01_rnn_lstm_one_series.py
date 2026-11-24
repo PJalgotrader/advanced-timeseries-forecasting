@@ -1,7 +1,17 @@
 # %% [markdown]
+# <!-- notebook-header -->
+# <a href="https://pedramjahangiry.com"><img src="https://raw.githubusercontent.com/PJalgotrader/advanced-timeseries-forecasting/main/assets/header/banner.png" alt="Dr. Pedram Jahangiry: ML, deep learning and time series, explained visually" width="100%"></a>
+#
+# <a href="https://colab.research.google.com/github/PJalgotrader/advanced-timeseries-forecasting/blob/main/07-deep-sequence-models/01_rnn_lstm_one_series.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> &nbsp; Run it in Colab. To keep your changes, choose **File → Save a copy in Drive** first.
+#
+# <a href="https://youtu.be/X6PwdT5-V_Q"><img src="https://img.shields.io/badge/Watch_the_video-D0A63C?style=for-the-badge&logo=youtube&logoColor=0A1020" alt="Watch the video"></a> <a href="https://www.youtube.com/playlist?list=PLG1FN7Dkkeu8"><img src="https://img.shields.io/badge/Deep_Forecasting_2027-0A1020?style=for-the-badge&logo=youtube&logoColor=E8C468" alt="Deep Forecasting 2027"></a> <a href="https://pedramjahangiry.com"><img src="https://img.shields.io/badge/pedramjahangiry.com-0A1020?style=for-the-badge&logo=googlechrome&logoColor=E8C468" alt="pedramjahangiry.com"></a> <a href="https://pedramjahangiry.com/newsletter.html"><img src="https://img.shields.io/badge/Newsletter-0A1020?style=for-the-badge&logo=substack&logoColor=E8C468" alt="Newsletter"></a> <a href="https://www.youtube.com/@pedramjahangiry"><img src="https://img.shields.io/badge/YouTube-0A1020?style=for-the-badge&logo=youtube&logoColor=E8C468" alt="YouTube"></a> <a href="https://www.linkedin.com/in/pedram-jahangiry-cfa-5778015a"><img src="https://img.shields.io/badge/LinkedIn-0A1020?style=for-the-badge&logo=linkedin&logoColor=E8C468" alt="LinkedIn"></a> <a href="https://x.com/pjalgo"><img src="https://img.shields.io/badge/%40pjalgo-0A1020?style=for-the-badge&logo=x&logoColor=E8C468" alt="@pjalgo"></a> <a href="https://github.com/PJalgotrader"><img src="https://img.shields.io/badge/GitHub-0A1020?style=for-the-badge&logo=github&logoColor=E8C468" alt="GitHub"></a>
+#
+# ---
+
+# %% [markdown]
 # # RNN and LSTM for one time series, in Keras
 #
-# The code for the video **"RNN and LSTM in Python: forecasting one time series"** (Deep Forecasting, Module 7, part 4.1).
+# The code for the video **"RNN and LSTM in Python: Forecasting a Time Series with Keras, Step by Step"** (Deep Forecasting, Module 7, part 4 of 5).
 # The theory is in the three videos before it: dense network vs RNN, the RNN, the LSTM.
 #
 # Every forecasting project in this repository follows the same six steps, and reports three forecasting horizons

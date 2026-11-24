@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Notebook banner</title>
+<!-- The banner at the top of every notebook and of the README. Same colours and fonts as pedramjahangiry.com.
+     Render: node tools/render_banner.js  (needs Playwright; writes assets/header/banner.png, 1600 x 360) -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500&display=block" rel="stylesheet">
+<style>
+  :root { --paper: #0A1020; --paper-deep: #141F3A; --ink: #E9E4D4; --ink-soft: #C0BCAD; --ink-mute: #8B8FA0;
+          --line: #263250; --gold: #D0A63C; --gold-bright: #E8C468; }
+  html, body { margin: 0; }
+  #b { position: relative; width: 1600px; height: 360px; overflow: hidden;
+       background: radial-gradient(900px 500px at 78% 120%, var(--paper-deep) 0%, var(--paper) 62%); }
+  svg { position: absolute; inset: 0; }
+  .photo { position: absolute; left: 80px; top: 60px; width: 240px; height: 240px; border-radius: 50%; overflow: hidden;
+           box-shadow: 0 0 0 6px var(--paper), 0 0 0 9px var(--gold), 0 18px 50px rgba(0,0,0,.5); background: #fff; }
+  .photo img { width: 330px; position: absolute; left: -47px; top: -12px; }
+  .text { position: absolute; left: 380px; top: 62px; }
+  .kicker { font: 500 22px/1 'IBM Plex Mono', monospace; letter-spacing: .18em; color: var(--gold); }
+  .name { margin-top: 22px; font: 600 74px/1 'Fraunces', Georgia, serif; color: var(--ink); letter-spacing: -.01em; }
+  .tag { margin-top: 20px; font: italic 400 34px/1.2 'Fraunces', Georgia, serif; color: var(--ink-soft); }
+  .tag em { color: var(--gold-bright); font-style: italic; }
+  .site { position: absolute; left: 380px; bottom: 50px; font: 500 22px/1 'IBM Plex Mono', monospace; color: var(--ink-mute);
+          letter-spacing: .04em; }
+  .site b { color: var(--gold); font-weight: 500; }
+</style>
+</head>
+<body>
+<div id="b">
+  <svg id="svg" width="1600" height="360" viewBox="0 0 1600 360" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="photo"><img src="pedram-cutout.png" alt=""></div>
+  <div class="text">
+    <div class="kicker">ADVANCED TIME SERIES FORECASTING</div>
+    <div class="name">Dr. Pedram Jahangiry</div>
+    <div class="tag">ML, deep learning &amp; time series, <em>explained visually.</em></div>
+  </div>
+  <div class="site"><b>pedramjahangiry.com</b> &nbsp;·&nbsp; youtube.com/@pedramjahangiry</div>
+</div>
+<script>
+(async () => {
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; })));
+  // a faint series on the right, with a forecast and its band: the same motif as the playlist cover
+  let seed = 7; const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296 - 0.5; };
+  const x0 = 1190, xn = 1470, x1 = 1600, base = 270, N = 30, M = 12;
+  const f = i => 0.9 * i + 26 * Math.sin(i * 2 * Math.PI / 12) + 8 * Math.sin(i * 0.9);
+  const h = [], fc = [];
+  for (let i = 0; i <= N; i++) h.push([x0 + (xn - x0) * i / N, base - f(i) - 14 * rnd()]);
+  for (let j = 0; j <= M; j++) fc.push([xn + (x1 - xn) * j / M, j ? base - f(N + j) - 4 : h[N][1]]);
+  const P = a => a.map((p, k) => (k ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+  const band = w => P(fc.map((p, j) => [p[0], p[1] - w * Math.sqrt(j)])) + ' ' +
+    fc.slice().reverse().map((p, k) => 'L' + p[0].toFixed(1) + ' ' + (p[1] + w * Math.sqrt(M - k)).toFixed(1)).join(' ') + ' Z';
+  let s = '';
+  for (let y = 120; y <= 330; y += 70) s += `<line x1="1170" y1="${y}" x2="1600" y2="${y}" stroke="#263250" stroke-width="1.5"/>`;
+  s += `<path d="${P(h)}" fill="none" stroke="#9CC4FF" stroke-opacity=".55" stroke-width="4" stroke-linejoin="round"/>`;
+  s += `<path d="${band(9)}" fill="#D0A63C" fill-opacity=".16"/>`;
+  s += `<path d="${P(fc)}" fill="none" stroke="#D0A63C" stroke-width="4.5" stroke-linejoin="round"/>`;
+  s += `<line x1="${xn}" y1="70" x2="${xn}" y2="360" stroke="#E9E4D4" stroke-opacity=".3" stroke-width="2" stroke-dasharray="8 7"/>`;
+  s += `<circle cx="${h[N][0]}" cy="${h[N][1]}" r="8" fill="#0A1020" stroke="#E9E4D4" stroke-width="3.5"/>`;
+  // a thin gold rule along the bottom
+  s += `<rect x="0" y="354" width="1600" height="6" fill="#D0A63C"/>`;
+  document.getElementById('svg').innerHTML = s;
+  window.READY = true;
+})();
+</script>
+</body>
+</html>

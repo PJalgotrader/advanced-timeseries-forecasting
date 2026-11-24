@@ -1,3 +1,5 @@
+<a href="https://pedramjahangiry.com"><img src="assets/header/banner.png" alt="Dr. Pedram Jahangiry: ML, deep learning and time series, explained visually" width="100%"></a>
+
 # Advanced Time Series Forecasting
 
 The code behind my video series on forecasting with machine learning and deep learning:
@@ -13,8 +15,8 @@ code, short enough to read from top to bottom. More models are added as the seri
 
 | Folder | Notebook | Video |
 |---|---|---|
-| `07-deep-sequence-models/` | `01_rnn_lstm_one_series.ipynb`: RNN and LSTM on one monthly series (airline passengers), at three horizons: one step ahead, multi-step, multi-output | RNN and LSTM in Python (Deep Forecasting, Module 7, part 4.1) |
-| `07-deep-sequence-models/` | `02_rnn_lstm_weather.ipynb`: dense, convolution, RNN, LSTM, GRU and bidirectional models on weather data with 14 features | RNN, LSTM and GRU in Python: the weather data (Module 7, part 4.2) |
+| `07-deep-sequence-models/` | `01_rnn_lstm_one_series.ipynb`: RNN and LSTM on one monthly series (airline passengers), at three horizons: one step ahead, multi-step, multi-output | [RNN and LSTM in Python: Forecasting a Time Series with Keras, Step by Step](https://youtu.be/X6PwdT5-V_Q) (Deep Forecasting, Module 7, part 4 of 5) |
+| `07-deep-sequence-models/` | `02_rnn_lstm_weather.ipynb`: dense, convolution, RNN, LSTM, GRU and bidirectional models on weather data with 14 features | [RNN vs LSTM vs GRU in Python: 7 Models on Real Weather Data in Keras](https://youtu.be/0fZhslU5JZQ) (Module 7, part 5 of 5) |
 
 The theory for both is in three videos: dense network vs RNN, the RNN, the LSTM.
 
@@ -67,6 +69,11 @@ bash tools/run_notebook.sh 07-deep-sequence-models/01_rnn_lstm_one_series.ipynb 
 ```
 
 Edit the `src` file, build, run, and commit both, so that the saved outputs always belong to the code.
+
+Every notebook opens with the same header cell (banner, Colab button, the video, links):
+`python tools/notebook_header.py <notebook.ipynb> <video link>` adds or replaces it in the notebook and its `src` file
+without touching the saved outputs. The banner is `assets/header/banner.html`, rendered to `banner.png` with
+`node tools/render_banner.js`.
 
 ## Data
 
