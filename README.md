@@ -1,4 +1,4 @@
-<a href="https://pedramjahangiry.com"><img src="assets/header/banner.png" alt="Dr. Pedram Jahangiry: ML, deep learning and time series, explained visually" width="100%"></a>
+<a href="https://pedramjahangiry.com"><img src="https://raw.githubusercontent.com/PJalgotrader/advanced-timeseries-forecasting/main/assets/header/banner.png?v=2" alt="Dr. Pedram Jahangiry: ML, deep learning and time series, explained visually" width="100%"></a>
 
 # Advanced Time Series Forecasting
 

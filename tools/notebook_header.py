@@ -10,7 +10,7 @@ from urllib.parse import quote
 
 REPO = "PJalgotrader/advanced-timeseries-forecasting"
 MARK = "<!-- notebook-header -->"
-BANNER = f"https://raw.githubusercontent.com/{REPO}/main/assets/header/banner.png"
+BANNER = f"https://raw.githubusercontent.com/{REPO}/main/assets/header/banner.png?v=2"   # raise v after changing the banner, so browsers fetch the new one
 PLAYLIST = "https://www.youtube.com/playlist?list=PLG1FN7Dkkeu8"   # Deep Forecasting 2027
 
 

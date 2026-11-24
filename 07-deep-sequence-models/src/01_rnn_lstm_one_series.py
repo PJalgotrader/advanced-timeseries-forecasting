@@ -1,6 +1,6 @@
 # %% [markdown]
 # <!-- notebook-header -->
-# <a href="https://pedramjahangiry.com"><img src="https://raw.githubusercontent.com/PJalgotrader/advanced-timeseries-forecasting/main/assets/header/banner.png" alt="Dr. Pedram Jahangiry: ML, deep learning and time series, explained visually" width="100%"></a>
+# <a href="https://pedramjahangiry.com"><img src="https://raw.githubusercontent.com/PJalgotrader/advanced-timeseries-forecasting/main/assets/header/banner.png?v=2" alt="Dr. Pedram Jahangiry: ML, deep learning and time series, explained visually" width="100%"></a>
 #
 # <a href="https://colab.research.google.com/github/PJalgotrader/advanced-timeseries-forecasting/blob/main/07-deep-sequence-models/01_rnn_lstm_one_series.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> &nbsp; Run it in Colab. To keep your changes, choose **File → Save a copy in Drive** first.
 #
